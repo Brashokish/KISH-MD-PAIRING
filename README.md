@@ -15,10 +15,6 @@
 <a href='https://github.com/Giftedmaurice/XLICON-V3-WEB/fork' target="_blank"><img alt='CLICK HERE' src='https://img.shields.io/badge/-CLICK HERE-black?style=for-the-badge&logo=fork&logoColor=yellow'/>
     
 
-# `HEROKU DEPLOY`
-   
-<a href='https://dashboard.heroku.com/new?template=https://github.com/Giftedmaurice/XLICON-V3-WEB' target="_blank"><img alt='DEPLOY' src='https://img.shields.io/badge/-CLICK HERE-black?style=for-the-badge&logo=heroku&logoColor=white'/>
-
 # `RENDER DEPLOY`
 <a href='https://dashboard.render.com/login' target="_blank"><img alt='DEPLOY' src='https://img.shields.io/badge/-CLICK HERE-black?style=for-the-badge&logo=render&logoColor=white'/>
 
