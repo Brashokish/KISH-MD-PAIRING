@@ -172,7 +172,7 @@
     async function Copy() {
       let text = document.getElementById("copy").innerText;
       let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
+      await navigator.clipboard.writeText(obj.innerText.replace('YOUR CODE: ', ''));
       obj.innerText = "COPIED";
       obj.style = "color:blue;font-weight:bold";
       obj.size = "5";
@@ -210,7 +210,7 @@
         a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
         let { data } = await axios(`/code?number=${bc}`);
         let code = data.code || "Service is Unavailable";
-        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:black;font-weight:bold">' + code + '</span></font><br><br><br>';
+        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">YOUR CODE: <span style="color:black;font-weight:bold">' + code + '</span></font><br><br><br>';
       }
     });
   </script>
