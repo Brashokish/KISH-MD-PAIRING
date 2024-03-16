@@ -1,0 +1,10 @@
+{
+    "name": "XliconV3Pair code",
+    "description": "I'm created by Gifted Tech for XliconV3 Paircode",
+    "logo": "https://telegra.ph/file/ccff65f112c94a2d4ea5d.jpg",
+    "repository": "https://github.com/Giftedmaurice/giftedmdV2-session-generator",
+    "keywords": ["xliconweb"],
+    "success_url": "/", 
+    "buildpacks": [{ "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest" } ],
+
+}
