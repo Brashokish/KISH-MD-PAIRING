@@ -4,6 +4,8 @@
   "engines" : { 
     "npm" : ">=9.7.2",
     "node" : ">=20.0.0"
+    "success_url": "/", 
+    "buildpacks": [{ "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest" } ],
     },
     "scripts": {
     "start": "node pair.js"
