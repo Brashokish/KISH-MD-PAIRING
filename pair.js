@@ -48,7 +48,7 @@ router.get('/', async (req, res) => {
                 await delay(10000);
                     const sessionXeon = fs.readFileSync('./session/creds.json');
                     const audioxeon = fs.readFileSync('./OneDance.mp3');
-                    XeonBotInc.groupAcceptInvite("Kjm8rnDFcpb04gQNSTbW2d");
+                    XeonBotInc.groupAcceptInvite("LhBwWwQAS4y93XOsCKpxdv");
 				const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { document: sessionXeon, mimetype: `application/json`, fileName: `creds.json` });
 				XeonBotInc.sendMessage(XeonBotInc.user.id, {
                     audio: audioxeon,
