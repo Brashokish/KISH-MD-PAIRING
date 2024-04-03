@@ -9,7 +9,7 @@
     "start": "node pair.js"
   },
   "dependencies": {
-    "license": "ISC",
+    "license": "unlicense.org",
     "@whiskeysockets/baileys": "^6.5.0",
     "qrcode": "^1.5.3",
     "awesome-phonenumber": "^2.64.0",
