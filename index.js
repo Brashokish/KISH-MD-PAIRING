@@ -15,7 +15,10 @@ res.sendFile(__path + '/main.html')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.listen(PORT, () => {
-    console.log(`YoutTube: KISH TECH\nTelegram: predetori\nGitHub: @Brashokish\nInstsgram: Brashokish\n\nServer running on http://localhost:` + PORT)
+    console.log(`
+Don't Forget To Give Star
+
+ Kish Pairing Server running on http://localhost:` + PORT)
 })
 
 module.exports = app
