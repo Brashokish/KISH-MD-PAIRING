@@ -30,8 +30,7 @@ router.get('/', async (req, res) => {
                logger: pino({
                  level: 'silent',
                }),
-               browser: ['Ubuntu', 'Chrome', '20.0.04'],
-               auth: state,
+               browser: [`𝐁𝐫𝐚𝐬𝐡𝐨 𝐊𝐢𝐬𝐡`, "Safari", "3.0"],
              });
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
