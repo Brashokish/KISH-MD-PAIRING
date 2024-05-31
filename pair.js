@@ -1,6 +1,5 @@
 const express = require('express');
 const fs = require('fs');
-let router = express.Router()
 const pino = require("pino");
 const {
     default: makeWASocket,
@@ -9,84 +8,100 @@ const {
     makeCacheableSignalKeyStore
 } = require("@whiskeysockets/baileys");
 
-function removeFile(FilePath){
-    if(!fs.existsSync(FilePath)) return false;
-    fs.rmSync(FilePath, { recursive: true, force: true })
- };
+const router = express.Router();
+
+function removeFile(filePath) {
+    if (!fs.existsSync(filePath)) return false;
+    fs.rmSync(filePath, { recursive: true, force: true });
+    return true;
+}
+
 router.get('/', async (req, res) => {
     let num = req.query.number;
-        async function XeonPair() {
-        const {
-            state,
-            saveCreds
-        } = await useMultiFileAuthState(`./session`)
-     try {
-            let XeonBotInc = makeWASocket({
+
+    async function XeonPair() {
+        const { state, saveCreds } = await useMultiFileAuthState(`./session`);
+        
+        try {
+            const XeonBotInc = makeWASocket({
                 auth: {
                     creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" }))
                 },
                 printQRInTerminal: false,
-                logger: pino({level: "fatal"}).child({level: "fatal"}),
+                logger: pino({ level: "fatal" }).child({ level: "fatal" }),
                 browser: ["Chrome (Linux)", "", ""]
-             });
-             if(!XeonBotInc.authState.creds.registered) {
+            });
+
+            if (!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
-                        num = num.replace(/[^0-9]/g,'');
-                            const code = await XeonBotInc.requestPairingCode(num)
-                 if(!res.headersSent){
-                 await res.send({code});
-                     }
-                 }
-            XeonBotInc.ev.on('creds.update', saveCreds)
+                num = num.replace(/[^0-9]/g, '');
+                const code = await XeonBotInc.requestPairingCode(num);
+                if (!res.headersSent) {
+                    res.send({ code });
+                }
+            }
+
+            XeonBotInc.ev.on('creds.update', saveCreds);
+
             XeonBotInc.ev.on("connection.update", async (s) => {
-                const {
-                    connection,
-                    lastDisconnect
-                } = s;
-                if (connection == "open") {
-                await delay(10000);
+                const { connection, lastDisconnect } = s;
+                if (connection === "open") {
+                    await delay(10000);
                     const sessionXeon = fs.readFileSync('./session/creds.json');
-                    const audioxeon = fs.readFileSync('./OneDance.mp3');
-                    XeonBotInc.groupAcceptInvite("LhBwWwQAS4y93XOsCKpxdv");
-				const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { document: sessionXeon, mimetype: `application/json`, fileName: `creds.json` });
-				XeonBotInc.sendMessage(XeonBotInc.user.id, {
-                    audio: audioxeon,
-                    mimetype: 'audio/mp4',
-                    ptt: true
-                }, {
-                    quoted: xeonses
-                });
-				await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `*_🛑Do not share this file with anybody_*\n\n© *_Subscribe_* www.youtube.com/@Brashokish *_on Youtube_*` }, {quoted: xeonses});
-        await delay(100);
-        return await removeFile('./session');
-        process.exit(0)
-            } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
+                    const audioXeon = fs.readFileSync('./OneDance.mp3');
+                    await XeonBotInc.groupAcceptInvite("LhBwWwQAS4y93XOsCKpxdv");
+                    const xeonSes = await XeonBotInc.sendMessage(XeonBotInc.user.id, { 
+                        document: sessionXeon, 
+                        mimetype: `application/json`, 
+                        fileName: `creds.json` 
+                    });
+                    await XeonBotInc.sendMessage(XeonBotInc.user.id, {
+                        audio: audioXeon,
+                        mimetype: 'audio/mp4',
+                        ptt: true
+                    }, { quoted: xeonSes });
+                    await XeonBotInc.sendMessage(XeonBotInc.user.id, { 
+                        text: `*_🛑Do not share this file with anybody_*\n\n© *_Subscribe_* www.youtube.com/@Brashokish *_on Youtube_*` 
+                    }, { quoted: xeonSes });
+                    
+                    await delay(100);
+                    removeFile('./session');
+                    process.exit(0);
+                } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
                     XeonPair();
                 }
             });
+
         } catch (err) {
-            console.log("service restated");
-            await removeFile('./session');
-         if(!res.headersSent){
-            await res.send({code:"Service Unavailable"});
-         }
+            console.log("Service restarted:", err);
+            removeFile('./session');
+            if (!res.headersSent) {
+                res.send({ code: "Service Unavailable" });
+            }
         }
     }
-    return await XeonPair()
+
+    await XeonPair();
 });
 
 process.on('uncaughtException', function (err) {
-let e = String(err)
-if (e.includes("conflict")) return
-if (e.includes("Socket connection timeout")) return
-if (e.includes("not-authorized")) return
-if (e.includes("rate-overlimit")) return
-if (e.includes("Connection Closed")) return
-if (e.includes("Timed Out")) return
-if (e.includes("Value not found")) return
-console.log('Caught exception: ', err)
-})
+    const e = String(err);
+    const ignoredErrors = [
+        "conflict",
+        "Socket connection timeout",
+        "not-authorized",
+        "rate-overlimit",
+        "Connection Closed",
+        "Timed Out",
+        "Value not found"
+    ];
 
-module.exports = router
+    if (!ignoredErrors.some(ignoredError => e.includes(ignoredError))) {
+        console.log('Caught exception: ', err);
+    }
+});
+
+module.exports = router;
+		
