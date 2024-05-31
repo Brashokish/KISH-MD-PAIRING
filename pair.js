@@ -31,8 +31,6 @@ router.get('/', async (req, res) => {
                  level: 'silent',
                }),
                browser: Browsers.ubuntu('Firefox'), // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
-               auth: state,
-               version
              });
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
