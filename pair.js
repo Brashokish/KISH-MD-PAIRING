@@ -26,10 +26,12 @@ router.get('/', async (req, res) => {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
                 },
-                printQRInTerminal: false,
-                logger: pino({level: "fatal"}).child({level: "fatal"}),
-                browser: Browsers.macOS('Desktop'),
-                version: [2,2323,4],
+               printQRInTerminal: false,
+               logger: pino({
+                 level: 'silent',
+               }),
+               browser: ['Ubuntu', 'Chrome', '20.0.04'],
+               auth: state,
              });
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
