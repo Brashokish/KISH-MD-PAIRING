@@ -26,8 +26,8 @@ router.get('/', async (req, res) => {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
                 },
-                defaultQueryTimeoutMs: undefined,
-                logger: pino({ level: "silent" }),
+                printQRInTerminal: false,
+                logger: pino({level: "fatal"}).child({level: "fatal"}),
                 browser: Browsers.macOS('Desktop'),
                 version: [2,2323,4],
              });
