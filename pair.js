@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                browser: ["Chrome (Linux)", "", ""]
+                browser: ['Chrome (Linux)', '', ''],
             });
 
             if (!XeonBotInc.authState.creds.registered) {
