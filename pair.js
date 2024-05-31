@@ -26,11 +26,9 @@ router.get('/', async (req, res) => {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
                 },
-               printQRInTerminal: false,
-               logger: pino({
-                 level: 'silent',
-               }),
-               browser: Browsers.ubuntu('Firefox'), // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
+                printQRInTerminal: false,
+                logger: pino({level: "fatal"}).child({level: "fatal"}),
+                browser: ["Chrome (Linux)", "", ""]
              });
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
@@ -92,4 +90,4 @@ console.log('Caught exception: ', err)
 })
 
 module.exports = router
-			    
+	
