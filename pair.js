@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
                     keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
                 },
                 printQRInTerminal: false,
-                logger: pino({level: "fatal"}).child({level: "fatal"}),
+                logger: pino({ level: "silent" }),
                 browser: Browsers.macOS("Desktop"),
              });
              if(!XeonBotInc.authState.creds.registered) {
