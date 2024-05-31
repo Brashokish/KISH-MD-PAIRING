@@ -30,7 +30,9 @@ router.get('/', async (req, res) => {
                logger: pino({
                  level: 'silent',
                }),
-               browser: [`𝐁𝐫𝐚𝐬𝐡𝐨 𝐊𝐢𝐬𝐡`, "Safari", "3.0"],
+               browser: Browsers.ubuntu('Firefox'), // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
+               auth: state,
+               version
              });
              if(!XeonBotInc.authState.creds.registered) {
                 await delay(1500);
