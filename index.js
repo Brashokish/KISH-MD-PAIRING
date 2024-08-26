@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 
-let code = require('../pair'); // Adjust path if needed
+const code = require('../pair'); // Adjust path if needed
 
 // Middleware setup
 app.use(bodyParser.json());
@@ -13,10 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/code', code);
 
 // Serve HTML files
-app.use('/pair', (req, res) => {
+app.get('/pair', (req, res) => {
     res.sendFile(path.join(__dirname, '../pair.html'));
 });
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../main.html'));
 });
 
