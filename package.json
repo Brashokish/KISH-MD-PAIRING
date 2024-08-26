@@ -1,10 +1,10 @@
 {
   "name": "paircode",
   "version": "1.0.0",
-  "main": "index.js", // Adjust this if your entry file is named differently
+  "main": "index.js", 
   "scripts": {
-    "start": "node index.js", // Entry point for your app
-    "dev": "nodemon index.js", // For local development
+    "start": "node index.js", 
+    "dev": "nodemon index.js", 
     "vercel-build": "npm install && npm run build",
     "render-build": "npm install && npm run build"
   },
@@ -17,13 +17,13 @@
     "body-parser": "^1.20.1",
     "pastebin-js": "^1.0.6",
     "path": "^0.12.7",
-    "fs": "0.0.1-security", // Note: fs is a built-in module, but listed here for clarity
+    "fs": "0.0.1-security", 
     "pino": "^8.0.0",
     "maher-zubair-baileys": "^6.6.5",
-    "@whiskeysockets/baileys": "^6.5.0" // Adjust version as necessary
+    "@whiskeysockets/baileys": "^6.5.0" 
   },
   "devDependencies": {
-    "nodemon": "^2.0.22" // For local development
+    "nodemon": "^2.0.22" 
   },
   "engines": {
     "npm" : ">=9.7.2",
