@@ -98,8 +98,23 @@ app.use('/', router);
 
 // Listen on the appropriate port for Render/Vercel
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+
+const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+// Handle EADDRINUSE error
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use. Trying another port...`);
+        setTimeout(() => {
+            app.listen(PORT + 1, () => {
+                console.log(`Server is running on port ${PORT + 1}`);
+            });
+        }, 1000);
+    } else {
+        console.error(err);
+    }
 });
 
 module.exports = app;
