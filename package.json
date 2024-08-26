@@ -1,7 +1,5 @@
 {
-  "name": "your-app-name",
   "description": "paircode",
-  "version": "1.0.0",
   "main": "index.js",
   "engines": { 
     "npm": ">=9.7.2",
