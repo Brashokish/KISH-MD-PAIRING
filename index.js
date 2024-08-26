@@ -1,26 +1,20 @@
 const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
 const path = require('path');
+const bodyParser = require('body-parser');
+const app = express();
 
-let code = require('../pair'); // Adjust path if needed
+let code = require('../pair');
+const PORT = process.env.PORT || 3000;
 
-// Middleware setup
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname)));
 
-// Route for /code
-app.use('/code', code);
-
-// Serve HTML files
-app.use('/pair', (req, res) => {
-    res.sendFile(path.join(__dirname, '../pair.html'));
-});
-app.use('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../main.html'));
+// Route to serve the HTML file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'main.html'));
 });
 
-// Export the serverless function
-module.exports = (req, res) => {
-    return app(req, res);
-};
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
