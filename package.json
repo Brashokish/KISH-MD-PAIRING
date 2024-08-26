@@ -1,11 +1,27 @@
 {
-  "name": "your-app-name",
-  "scripts": {
-    "start": "vercel dev", 
-    "build": "vercel build" 
+  "description": "paircode",
+  "main": "index.js",
+  "engines": { 
+    "npm": ">=9.7.2",
+    "node": "20.16.0"
   },
+  "scripts": {
+    "start": "node index.js",
+    "vercel-build": "npm install && npm run build",
+    "render-build": "npm install && npm run build"
+  },
+  "author": "Brashokish",
+  "license": "GPL-3.0-only",
   "dependencies": {
+    "@whiskeysockets/baileys": "6.5.0",
+    "maher-zubair-baileys": "^6.6.5",
+    "qrcode": "1.5.3",
+    "awesome-phonenumber": "^2.64.0",
+    "pino": "^8.14.1",
+    "phone": "^3.1.30",
+    "body-parser": "^1.20.1",
+    "pastebin-js": "^1.0.6",
     "express": "^4.18.2",
-    "body-parser": "^1.20.1"
+    "path": "^0.12.7"
   }
 }
