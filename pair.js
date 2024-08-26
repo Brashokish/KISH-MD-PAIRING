@@ -97,7 +97,7 @@ process.on('uncaughtException', function (err) {
 app.use('/', router);
 
 // Listen on the appropriate port for Render/Vercel
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
