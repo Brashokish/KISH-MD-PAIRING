@@ -1,24 +1,26 @@
 const express = require('express');
 const app = express();
-__path = process.cwd()
-const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 8000;
-let code = require('./pair');
-require('events').EventEmitter.defaultMaxListeners = 500;
-app.use('/code', code);
-app.use('/pair',async (req, res, next) => {
-res.sendFile(__path + '/pair.html')
-})
-app.use('/',async (req, res, next) => {
-res.sendFile(__path + '/main.html')
-})
+const bodyParser = require('body-parser');
+const path = require('path');
+
+let code = require('../pair'); // Adjust path if needed
+
+// Middleware setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.listen(PORT, () => {
-    console.log(`
-Don't Forget To Give Star
 
- Kish Pairing Server running on http://localhost:` + PORT)
-})
+// Route for /code
+app.use('/code', code);
 
-module.exports = app
+// Serve HTML files
+app.use('/pair', (req, res) => {
+    res.sendFile(path.join(__dirname, '../pair.html'));
+});
+app.use('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../main.html'));
+});
+
+// Export the serverless function
+module.exports = (req, res) => {
+    return app(req, res);
+};
