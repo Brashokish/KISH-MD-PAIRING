@@ -9,7 +9,7 @@ const {
 } = require("@whiskeysockets/baileys");
 
 const router = express.Router();
-const sessionFolder = './SESSION';
+const sessionFolder = './img';
 
 // Cleanup session folder if it exists
 if (fs.existsSync(sessionFolder)) {
