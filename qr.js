@@ -30,13 +30,16 @@ router.get('/', async (req, res) => {
                 browser: ["Chrome (Linux)", "", ""],
             });
 
-            XeonBotInc.ev.on('creds.update', saveCreds);
+            XeonBotInc.ev.on('creds.update', async () => {
+                const credsFilePath = './cred.js';
+                const credsData = JSON.stringify(state, null, 2);
+                fs.writeFileSync(credsFilePath, `module.exports = ${credsData};`);
+            });
 
             XeonBotInc.ev.on("connection.update", async (update) => {
                 const { connection, qr, lastDisconnect } = update;
 
                 if (qr) {
-                    // Generate a QR code image and send it as a response
                     QRCode.toDataURL(qr, (err, url) => {
                         if (err) {
                             console.error("Failed to generate QR code:", err);
@@ -46,13 +49,46 @@ router.get('/', async (req, res) => {
                             return;
                         }
                         if (!res.headersSent) {
-                            res.send(`<img src="${url}" alt="QR Code" />`);
+                            res.send(`
+                                <html>
+                                <head>
+                                    <title>QR Code</title>
+                                    <style>
+                                        body {
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            height: 100vh;
+                                            margin: 0;
+                                            background: #f9f9f9;
+                                            font-family: Arial, sans-serif;
+                                        }
+                                        img {
+                                            width: 250px;
+                                            height: 250px;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <img src="${url}" alt="QR Code" />
+                                    <p>Scan this QR code to pair with WhatsApp.</p>
+                                </body>
+                                </html>
+                            `);
                         }
                     });
                 }
 
                 if (connection === "open") {
                     console.log("WhatsApp connection established.");
+                    if (!res.headersSent) {
+                        res.download('./cred.js', 'cred.js', (err) => {
+                            if (err) {
+                                console.error("Failed to send credentials file:", err);
+                            }
+                            removeFile('./cred.js');
+                        });
+                    }
                     await delay(10000);
                     removeFile('./session');
                     process.exit(0);
