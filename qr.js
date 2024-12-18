@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const pino = require("pino");
+const QRCode = require("qrcode");
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -25,7 +26,7 @@ router.get('/', async (req, res) => {
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
                 },
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                printQRInTerminal: true, // Enable QR code display in terminal
+                printQRInTerminal: false, // Disable terminal QR code printing
                 browser: ["Chrome (Linux)", "", ""],
             });
 
@@ -35,10 +36,19 @@ router.get('/', async (req, res) => {
                 const { connection, qr, lastDisconnect } = update;
 
                 if (qr) {
-                    // Send the QR code as a response if needed
-                    if (!res.headersSent) {
-                        res.send({ qr });
-                    }
+                    // Generate a QR code image and send it as a response
+                    QRCode.toDataURL(qr, (err, url) => {
+                        if (err) {
+                            console.error("Failed to generate QR code:", err);
+                            if (!res.headersSent) {
+                                res.status(500).send({ error: "Failed to generate QR code" });
+                            }
+                            return;
+                        }
+                        if (!res.headersSent) {
+                            res.send(`<img src="${url}" alt="QR Code" />`);
+                        }
+                    });
                 }
 
                 if (connection === "open") {
