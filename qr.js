@@ -1,7 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const pino = require("pino");
-const QRCode = require("qrcode");
 const { toBuffer } = require('qrcode');
 const {
     default: makeWASocket,
@@ -23,6 +22,8 @@ if (fs.existsSync(sessionFolder)) {
 }
 
 router.get('/', async (req, res) => {
+    let qrSent = false; // Track if the QR has been sent to prevent multiple responses
+
     async function startBot() {
         const { state, saveCreds } = await useMultiFileAuthState(sessionFolder);
 
@@ -37,18 +38,17 @@ router.get('/', async (req, res) => {
             conn.ev.on('connection.update', async (update) => {
                 const { connection, qr, lastDisconnect } = update;
 
-                if (qr) {
+                if (qr && !qrSent) {
                     // Generate QR code buffer and send as binary response
                     const qrBuffer = await toBuffer(qr);
-                    if (!res.headersSent) {
-                        res.writeHead(200, { 'Content-Type': 'image/png' });
-                        res.end(qrBuffer);
-                    }
+                    qrSent = true; // Prevent multiple responses
+                    res.writeHead(200, { 'Content-Type': 'image/png' });
+                    res.end(qrBuffer);
                 }
 
                 if (connection === 'open') {
                     console.log("WhatsApp connection established.");
-                    
+
                     // Send session file as a document
                     const sessionFilePath = `${sessionFolder}/creds.json`;
                     if (fs.existsSync(sessionFilePath)) {
@@ -83,7 +83,9 @@ router.get('/', async (req, res) => {
 
         } catch (error) {
             console.error("Error starting bot:", error);
-            res.status(500).send({ error: "Failed to initialize bot" });
+            if (!res.headersSent) {
+                res.status(500).send({ error: "Failed to initialize bot" });
+            }
         }
     }
 
