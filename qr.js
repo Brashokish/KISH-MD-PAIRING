@@ -1,105 +1,26 @@
-//Created By KISH
-//Don't edit these lines
-
-
 const express = require('express');
-const path = require('path');
-const { toBuffer } = require('qrcode');
-const axios = require('axios');
-const fs = require('fs');
-const pino = require('pino');
-const fetch = require('node-fetch');
-const { exec } = require('child_process');
-
-const sessionFolder = './SESSION';
-if (fs.existsSync(sessionFolder)) {
-  try {
-    fs.rmdirSync(sessionFolder, { recursive: true });
-    console.log('Deleted the "SESSION" folder.');
-  } catch (err) {
-    console.error('Error deleting the "SESSION" folder:', err);
-  }
-}
-
-let app = (global.app = express());
+const QRCode = require('qrcode');
 const router = express.Router();
 
-const PORT = 3000;
+// Route to generate QR code
+router.get('/generate', async (req, res) => {
+    const code = req.query.code; // Get the pairing code from the query parameter
 
-const makeWASocket = require('@whiskeysockets/baileys').default;
-
-
-const {
-  delay,
-  useMultiFileAuthState,
-  makeInMemoryStore,
-} = require('@whiskeysockets/baileys');
-
-app.use(
-  '/',
-  router.get('/', (req, res) => {
-
-
-
-    async function Guru() {
-      const { state, saveCreds } = await useMultiFileAuthState('./SESSION');
-    
-      try {
-        let conn = makeWASocket({
-            printQRInTerminal: false,
-            logger: pino({ level: 'fatal' }),
-            auth: state,
-            browser: [`𝐁𝐫𝐚𝐬𝐡𝐨 𝐊𝐢𝐬𝐡`, "Safari", "3.0"],
-          });
-    
-          conn.ev.on('connection.update', async (s) => {
-            console.log(s);
-    
-            if (s.qr !== undefined) {
-              res.end(await toBuffer(s.qr));
-            }
-    
-            const { connection, lastDisconnect } = s;
-    
-            if (connection === 'open') {
-              await delay(1000 * 5);
-              let botsession = fs.readFileSync('./SESSION/creds.json');
-   
-              await delay(1000 * 10);
-    
-              await conn.sendMessage(conn.user.id, { document: botsession, mimetype: `application/json`, fileName: `creds.json` })
-    
-              await delay(500 * 10);
-    
-              let Lodushek = `Hi,You are successfully connected!\n\n here is your session file.\n\n Have fun and have a great day ahead! `;
-    
-              await conn.sendMessage(conn.user.id, {
-                image: { url: 'https://telegra.ph/file/9ae2ef1de51e0683cb506.jpg' },
-                caption: Lodushek,
-              });
-             
-              process.send('reset');
-
-            }
-           
-    
-            if (connection === 'close' && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
-              await Guru(); // Reconnect asynchronously
-              
-            
-            }
-          });
-    
-          conn.ev.on('creds.update', saveCreds);
-    
-          conn.ev.on('messages.upsert', () => {});
-      } catch (error) {
-        console.error(error);
-      }
+    // Check if the code parameter is provided
+    if (!code) {
+        return res.status(400).send({ error: 'Pairing code is required' });
     }
-    
-    Guru();
-  })
-);
 
-app.listen(PORT, () => console.log('App listened on port', PORT));
+    try {
+        // Generate QR code as a data URL
+        const qrImage = await QRCode.toDataURL(code);
+        // Send the QR code image as an HTML image tag
+        res.send(`<img src="${qrImage}" alt="QR Code" />`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'Failed to generate QR code' });
+    }
+});
+
+// Export the router
+module.exports = router;
