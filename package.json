@@ -6,8 +6,7 @@
     "node": "20.16.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "render-build": "npm install && npm run build"  
+    "start": "node index.js"
   },
   "author": "Brashokish",
   "license": "GPL-3.0-only",
