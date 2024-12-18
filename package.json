@@ -7,7 +7,6 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "echo 'Build step here'",  
     "vercel-build": "npm install && npm run build",
     "render-build": "npm install && npm run build"
   },
