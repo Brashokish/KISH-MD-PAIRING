@@ -1,31 +1,24 @@
 const express = require('express');
 const app = express();
-const path = require('path');
-const bodyParser = require('body-parser');
-
-// Middleware
+__path = process.cwd()
+const bodyParser = require("body-parser");
+const PORT = process.env.PORT || 8000;
+let code = require('./pair');
+require('events').EventEmitter.defaultMaxListeners = 500;
+app.use('/code', code);
+app.use('/pair',async (req, res, next) => {
+res.sendFile(__path + '/pair.html')
+})
+app.use('/',async (req, res, next) => {
+res.sendFile(__path + '/main.html')
+})
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.listen(PORT, () => {
+    console.log(`
+Don't Forget To Give Star
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+ Kish Pairing Server running on http://localhost:` + PORT)
+})
 
-// Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'main.html'));
-});
-
-app.get('/pair', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pair.html'));
-});
-
-// Vercel requires module.exports for serverless functions
-module.exports = app;
-
-// Only listen locally when not in Vercel environment
-if (process.env.VERCEL !== '1') {
-  const PORT = process.env.PORT || 8000;
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
+module.exports = app
